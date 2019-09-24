@@ -106,7 +106,7 @@ public class HomeController {
 
         try {
             mv.addObject("who", uMapper.selectOneUser(name).getName());
-            mv.addObject("whoseMail", uMapper.selectOneUser(name).getEmail());
+            mv.addObject("whos", uMapper.selectOneUser(name).getEmail());
             System.out.println("NAME:"+ name + ", EMAIL: " + uMapper.selectOneUser(name).getEmail());
             System.out.println("###############  Query Success!!  ###############");
             mv.setViewName("success");

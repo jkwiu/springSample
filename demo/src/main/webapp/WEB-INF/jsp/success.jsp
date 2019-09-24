@@ -9,8 +9,10 @@
     </head>
 
     <body>
+    ${who}
+    ${whos}
 
-    <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="1">
+    <%-- <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="1">
      <TR>
         <TH>No.</TH>
         <TH>NAME</TH>
@@ -29,9 +31,11 @@
         </TD>
     </TR>
       </c:forEach>
-      </TABLE>
+      </TABLE> --%>
 
        <h1>성공</h1>
     </body>
 
     </html>
+
+    
