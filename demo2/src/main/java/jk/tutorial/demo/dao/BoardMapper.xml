@@ -31,14 +31,14 @@
         (0, 
         <include refid="title"/>, 
         <include refid="content"/>,
-        #{count}, SYSDATE())
+        #{count}, now())
     </insert>
     
     <update id="updateBoard" parameterType="boardDto">
         UPDATE board SET
         title = <include refid="title"/>,
-        content = <include refid="content"/>,
-        WHERE No = #{No}
+        content = <include refid="content"/>
+        WHERE No = #{no}
     </update> 
     
     <delete id="deleteBoard" parameterType="int">
@@ -50,7 +50,7 @@
     </select>
     
     <select id="selectAllBoard" resultType="boardDto">
-        SELECT * FROM board
+        SELECT No, Title, Content, Reg_Date as regDate FROM board
     </select>
 </mapper>
 
