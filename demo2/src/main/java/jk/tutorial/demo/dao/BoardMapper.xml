@@ -47,10 +47,34 @@
     
     <select id="selectOneBoard" parameterType="int" resultType="boardDto">
         SELECT * FROM board WHERE No = #{no}
+        
+
     </select>
-    
+    <update id="updateHitCnt" parameterType="hashmap">
+
+         UPDATE board SET Count = Count + 1 WHERE No = #{no}
+
+    </update>
+
     <select id="selectAllBoard" resultType="boardDto">
-        SELECT No, Title, Content, Reg_Date as regDate FROM board
+        SELECT
+             No,
+             Title,
+             Count,
+             Reg_Date as regDate
+        FROM board
+        LIMIT #{startList}, #{listSize}
+    </select>
+
+    <select id = "getBoardListCnt" resultType = "int">
+        SELECT
+            Count(*) as listCnt
+        FROM
+            board
+    </select>
+
+    <select id = "search" parameterType = "String" resultType="boardDto">
+        SELECT * FROM board WHERE Title LIKE CONCAT('%',#{word},'%') OR Content LIKE CONCAT('%',#{word},'%')
     </select>
 </mapper>
 

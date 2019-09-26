@@ -9,5 +9,8 @@ public interface BoardService{
     public void modify(BoardDTO board);
     public void remove(int num);
     public BoardDTO getBoard(int num);
-    public List<BoardDTO>  getBoardList();
+    public List<BoardDTO>  selectAllBoard(Paging paging);
+    public List<BoardDTO> searchBoard(String word);
+    // public int pageNum(int num);
+    public int getBoardListCnt();
 }

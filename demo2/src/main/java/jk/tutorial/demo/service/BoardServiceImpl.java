@@ -35,12 +35,47 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardDTO getBoard(int num) {
         // TODO Auto-generated method stub
+        bMapper.updateHitCnt(num);
+        // System.out.println("board hit plus");
         return bMapper.selectOneBoard(num);
     }
  
     @Override
-    public List<BoardDTO> getBoardList() {
+    public List<BoardDTO> selectAllBoard(Paging paging) {
         // TODO Auto-generated method stub
-        return bMapper.selectAllBoard();
+        return bMapper.selectAllBoard(paging);
     }
+
+    @Override
+    public List<BoardDTO> searchBoard(String word){
+        return bMapper.search(word);
+    }
+
+    // @Override
+    // public List<Integer> pageNum(int totalNum){
+    //     List<Integer> result = new ArrayList<Integer>();
+    //     if(totalNum % 10 == 0){
+    //         for(int i=0; i<totalNum / 10; i++){
+    //             result.add(i);
+    //         }
+    //     } else {
+    //         for(int i=0; i<(totalNum / 10) +1; i++){
+    //             result.add(i);
+    //         }
+    //     }
+    //     return result;
+    // }
+
+    // @Override
+    // public int pageNum(int totalNum){
+    //     if(totalNum % 10 == 0){
+    //         return totalNum/10;
+    //     }
+    //     return totalNum/10 +1;
+    // }
+    @Override
+    public int getBoardListCnt(){
+        return bMapper.getBoardListCnt();
+    }
+
 }

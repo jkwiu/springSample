@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
-    <title>전체 게시글</title>
+    <title>검색 결과</title>
     
     <style type="text/css">
         #wrap {
@@ -39,7 +39,7 @@
         <TH>COUNT</TH>
         <TH>REG-DATE</TH>
     </TR>
-      <c:forEach items="${queryAll}" var="list" varStatus="status">
+      <c:forEach items="${searchedList}" var="list" varStatus="status">
       <TR>
         <TD width = "50">
             ${list.no}
@@ -60,16 +60,6 @@
     </div>
     </form>
 </div>
-    <input type="button" value="prev" onclick="window.location.href='http://localhost:8080/board/list'">
-    <TABLE>
-    <c:corEach itesm="${pageNum}" var="order">
-        <TR>
-            <TD>
-                <a href = "http://localhost:8080/board/page?no=${pageNum}">${pageNum}</a>
-            </TD>
-        </TR>
-    </c:forEach>
-    </TABLE>
     <form method = "post" action = "http://localhost:8080/board/search">
         <label>제목+내용</label>  
         <input name="word" type = "text">
@@ -80,5 +70,3 @@
  
 </body>
 </html>
-
-<%-- https://freehoon.tistory.com/112 --%>

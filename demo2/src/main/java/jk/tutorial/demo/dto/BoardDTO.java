@@ -54,7 +54,7 @@ public class BoardDTO{
     @Override
     public String toString() {
         return "BoardDto [No=" + num + ", title=" + title + ", content=" + content 
-                + ", regDate=" + regDate + "]";
+                + ", count=" + count + ", regDate=" + regDate + "]";
     }
 
 
