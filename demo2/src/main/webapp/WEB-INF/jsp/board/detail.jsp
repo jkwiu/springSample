@@ -28,7 +28,7 @@
 <div id="wrap">
     <br>
     <div id="topForm">
-            <input type="button" value="목록"" onclick="window.location.href='http://localhost:8080/board/list'">
+            <input type="button" value="목록"" onclick="window.location.href='http://localhost:8080/board/list?pageNum=1'">
     </div>
     <br>
     <div id="board">

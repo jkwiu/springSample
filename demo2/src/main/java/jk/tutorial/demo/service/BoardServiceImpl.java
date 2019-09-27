@@ -41,15 +41,21 @@ public class BoardServiceImpl implements BoardService {
     }
  
     @Override
-    public List<BoardDTO> selectAllBoard(Paging paging) {
+    public List<BoardDTO> selectAllBoard(int startPage, int endPage, String words) {
         // TODO Auto-generated method stub
-        return bMapper.selectAllBoard(paging);
+
+System.out.println(startPage);
+System.out.println(endPage);
+System.out.println(words);
+
+
+        return bMapper.selectAllBoard(startPage, endPage, words);
     }
 
-    @Override
-    public List<BoardDTO> searchBoard(String word){
-        return bMapper.search(word);
-    }
+    // @Override
+    // public List<BoardDTO> searchBoard(String word){
+    //     return bMapper.search(word);
+    // }
 
     // @Override
     // public List<Integer> pageNum(int totalNum){
@@ -73,9 +79,10 @@ public class BoardServiceImpl implements BoardService {
     //     }
     //     return totalNum/10 +1;
     // }
+
     @Override
-    public int getBoardListCnt(){
-        return bMapper.getBoardListCnt();
+    public int getBoardListCnt(String value){
+        return bMapper.getBoardListCnt(value);
     }
 
 }

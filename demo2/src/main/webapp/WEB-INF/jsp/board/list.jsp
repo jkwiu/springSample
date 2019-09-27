@@ -60,20 +60,18 @@
     </div>
     </form>
 </div>
-    <input type="button" value="prev" onclick="window.location.href='http://localhost:8080/board/list'">
     <TABLE>
-    <c:corEach itesm="${pageNum}" var="order">
-        <TR>
-            <TD>
-                <a href = "http://localhost:8080/board/page?no=${pageNum}">${pageNum}</a>
-            </TD>
-        </TR>
+    <c:forEach items="${pn}" var="pageNum">
+        <TD>
+            <TR>
+                <a href = "http://localhost:8080/board/list?pageNum=${pageNum}">${pageNum} </a>
+            </TR>
+        </TD>
     </c:forEach>
     </TABLE>
-    <form method = "post" action = "http://localhost:8080/board/search">
+    <form method = "post" action = "http://localhost:8080/board/list?pageNum=0">
         <label>제목+내용</label>  
-        <input name="word" type = "text">
-         
+        <input type="text" id="value" name="value" >
         <input type="submit" value="검색">
     </form>
 
@@ -81,4 +79,3 @@
 </body>
 </html>
 
-<%-- https://freehoon.tistory.com/112 --%>

@@ -1,5 +1,7 @@
 package jk.tutorial.demo.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 // import java.util.List;
@@ -12,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-// import jk.tutorial.demo.dao.BoardMapper;
 import jk.tutorial.demo.dto.BoardDTO;
 import jk.tutorial.demo.service.BoardServiceImpl;
-import jk.tutorial.demo.service.Paging;
 
 
 @Controller
@@ -26,26 +26,64 @@ public class HomeController {
     @Autowired
     private BoardServiceImpl bService;
 
+      @RequestMapping("main")
+      public ModelAndView main(){
+         ModelAndView mv = new ModelAndView();
+         mv.setViewName("redirect:/board/list?pageNum=1");
+         return mv;
+      }
+
       //board lists
       @RequestMapping("list")
-      public ModelAndView list(
-         @RequestParam(required = false, defaultValue = "1")int page, 
-         @RequestParam(required = false,defaultValue = "1")int range){
+      public ModelAndView list(int pageNum, String value){
          ModelAndView mv = new ModelAndView();
-         // mv.addObject("queryAll", bService.getBoardList());
+         
+         int endPage;
+         int startPage;
+         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ");
+         System.out.println("value: " + value);
+         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " + String.valueOf(pageNum));
+         if (pageNum == 0){
+            pageNum = numbering(value);
+            endPage = 10;
+            startPage = pageNum*10 -10;  
+            
+            mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));
+            return mv;
+         }
+         // if(value != null){
+         //    pageNum =numbering(value);
+         //    endPage = 10;
+         //    startPage = pageNum*10 -10;
+         //    mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));
+         //    return mv;
+         // }
+         endPage = 10;
+         startPage = pageNum*10 -10;   
+         
+         mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, String.valueOf(value)));
          //get number to handel number of page by assigning total page number
-         // int pageNumber = bService.pageNum(bService.getBoardList().size());
-         // System.out.println(bService.getBoardList().size());
-
-         //전체 게시글 갯수
-         int listCnt = bService.getBoardListCnt();
-
-         //paging 객체 생성
-         Paging paging = new Paging();
-         paging.pageInfo(page, range, listCnt);
-
-         mv.addObject("paging", paging);
-         mv.addObject("boardList", bService.getBoardListCnt());
+         int pageNumber = bService.getBoardListCnt(value);
+         List<Integer> pn = new ArrayList<Integer>();
+         if (pageNumber % 10 == 0) {
+            System.out.println("딱 10 page");
+            for(int i=1; i<pageNumber/10 +1; i++){
+               pn.add(i);
+            }
+         } else {
+            System.out.println("page가 하나 더");
+            for(int i=1; i<pageNumber/10 +2; i++){
+               pn.add(i);
+            }
+         }
+         mv.addObject("pn", pn);
+         // if ( value != null ){
+         //    mv.addObject("searchedList", bService.selectAllBoard(startPage,endPage,value));
+         //    return mv;
+         // }
+         
+         System.out.println("총 글 목록 수: " + pageNumber);
+         System.out.println("각 페이지 넘버링: " +  pn);
          return mv;
      }
 
@@ -116,11 +154,21 @@ public class HomeController {
      }
 
      //search
-     @RequestMapping("search")
-     public ModelAndView search(String word) {
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("searchedList", bService.searchBoard(word));
-      //   System.out.println(bService.searchBoard(word));
-        return mv;
+   //   @RequestMapping("search")
+   //   public ModelAndView search(String value) {
+   //      ModelAndView mv = new ModelAndView();
+   //      int totalPageCount = numbering(value);
+   //      System.out.println("검색된 결과 수:" +totalPageCount);
+        
+        
+   //      mv.setViewName("redirect:/board/list");
+   //      return mv;
+   //   }
+
+     //page numbering
+     @RequestMapping
+     public int numbering(String value){
+        int totalPageCount =  bService.getBoardListCnt(value);
+        return totalPageCount;
      }
 }
