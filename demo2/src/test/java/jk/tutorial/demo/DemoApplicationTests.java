@@ -16,8 +16,6 @@ import jk.tutorial.demo.service.BoardService;
 @SpringBootTest
 public class DemoApplicationTests{
 
-    @Autowired
-    private BoardMapper bMapper;
 
     @Autowired
     private BoardService bService;

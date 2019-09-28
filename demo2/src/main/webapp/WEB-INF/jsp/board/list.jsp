@@ -28,6 +28,7 @@
 <div id="wrap">
     <br>
     <div id="topForm">
+            <input Type = button value = 목록 onClick="location.href='http://localhost:8080/board/list?pageNum=1'">
             <input type="button" value="글쓰기" onclick="window.location.href='http://localhost:8080/board/write'">
     </div>
     <br>
@@ -61,13 +62,33 @@
     </form>
 </div>
     <TABLE>
-    <c:forEach items="${pn}" var="pageNum">
+        <TD>
+            <TR>
+                <%-- 첫 페이지로 이동 --%>
+                <a href = "http://localhost:8080/board/list?pageNum=1">[맨 처음]</a>
+            </TR>
+            <TR>
+                <%-- 이전 페이지로 이동 --%>
+                <a href = "http://localhost:8080/board/list?pageNum=${prePage}">◀</a>
+            </TR>
+        <TD>
+    <c:forEach items="${pn}" var="pageNum" begin = "${startPageNum}" end = "${lastPageNum}">
         <TD>
             <TR>
                 <a href = "http://localhost:8080/board/list?pageNum=${pageNum}">${pageNum} </a>
             </TR>
         </TD>
     </c:forEach>
+        <TD>
+            <TR>
+                <%-- 다음 페이지로 이동 --%>
+                <a href = "http://localhost:8080/board/list?pageNum=${nextPage}">▶</a>
+            </TR>
+            <TR>
+                <%-- 맨 끝으로 이동 --%>
+                <a href = "http://localhost:8080/board/list?pageNum=${lastPageNumber}">[맨 끝]</a>
+            </TR>
+        <TD>
     </TABLE>
     <form method = "post" action = "http://localhost:8080/board/list?pageNum=0">
         <label>제목+내용</label>  

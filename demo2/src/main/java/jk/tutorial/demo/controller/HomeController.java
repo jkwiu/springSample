@@ -36,54 +36,78 @@ public class HomeController {
       //board lists
       @RequestMapping("list")
       public ModelAndView list(int pageNum, String value){
-         ModelAndView mv = new ModelAndView();
-         
+         ModelAndView mv = new ModelAndView();  
+         //총 페이지 수
+         int getTotalCount = bService.getBoardListCnt(null);
+         if (getTotalCount % 10 == 0) {
+            getTotalCount = getTotalCount/10;
+         }  else {
+            getTotalCount = getTotalCount/10 + 1;
+         }      
+         if(pageNum < 0 || pageNum > getTotalCount){
+            mv.setViewName("/board/error");
+         }
          int endPage;
          int startPage;
-         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ");
-         System.out.println("value: " + value);
-         System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% " + String.valueOf(pageNum));
+         //when page list searched
          if (pageNum == 0){
             pageNum = numbering(value);
+            System.out.println("pageNum 검색 시 : " +pageNum);
             endPage = 10;
-            startPage = pageNum*10 -10;  
-            
+            startPage = 0;  
             mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));
-            return mv;
+         //load all page list
+         } else {
+            endPage = 10;
+            startPage = pageNum*10 -10;   
+            mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, null));
          }
-         // if(value != null){
-         //    pageNum =numbering(value);
-         //    endPage = 10;
-         //    startPage = pageNum*10 -10;
-         //    mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));
-         //    return mv;
-         // }
-         endPage = 10;
-         startPage = pageNum*10 -10;   
          
-         mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, String.valueOf(value)));
-         //get number to handel number of page by assigning total page number
+         //paging nuumbering
          int pageNumber = bService.getBoardListCnt(value);
+         System.out.println("검색시 밑에 page number: " + pageNumber);
          List<Integer> pn = new ArrayList<Integer>();
          if (pageNumber % 10 == 0) {
-            System.out.println("딱 10 page");
             for(int i=1; i<pageNumber/10 +1; i++){
                pn.add(i);
             }
          } else {
-            System.out.println("page가 하나 더");
             for(int i=1; i<pageNumber/10 +2; i++){
                pn.add(i);
             }
          }
          mv.addObject("pn", pn);
-         // if ( value != null ){
-         //    mv.addObject("searchedList", bService.selectAllBoard(startPage,endPage,value));
-         //    return mv;
-         // }
-         
-         System.out.println("총 글 목록 수: " + pageNumber);
-         System.out.println("각 페이지 넘버링: " +  pn);
+         System.out.println("검색시 pn: " + pn);
+         System.out.println("검색시 pageNum 밑에: " + pageNum);
+         int incomingPageNumber = pageNum-1;
+         int startPageNum = (incomingPageNumber/10*10);
+         int lastPageNum = startPageNum + 9;
+         mv.addObject("startPageNum", startPageNum);
+         mv.addObject("lastPageNum", lastPageNum);
+         System.out.printf("startPageNum:%s  lastPageNum: %s\n", startPageNum, lastPageNum);
+         System.out.println("총 페이지 수: " + pn);
+
+         //navigation bar
+         //move to last page
+         mv.addObject("lastPageNumber", getTotalCount);
+
+         //move to previous page
+         int prePage = pageNum-1;
+         if (prePage <= 0){
+            prePage = 1;
+         } 
+         mv.addObject("prePage", prePage);
+
+         //move to next page
+         int nextPage = pageNum+1;
+         System.out.println("마지막 page number: " + lastPageNum);
+         System.out.println("nextPage1: " + nextPage);
+         if(nextPage > getTotalCount){
+            nextPage = nextPage - 1;
+         }
+         System.out.println("nextPage2: " + nextPage);
+         mv.addObject("nextPage", nextPage);
+
          return mv;
      }
 
@@ -118,7 +142,7 @@ public class HomeController {
         board.setTitle(param.get("title"));
         board.setContent(param.get("content"));
         bService.write(board);
-        mv.setViewName("redirect:/board/list");
+        mv.setViewName("/board/success");
         return mv;
      }
 
@@ -127,7 +151,7 @@ public class HomeController {
      public ModelAndView delete(int no){
         ModelAndView mv = new ModelAndView();
         bService.remove(no);
-        mv.setViewName("redirect:/board/list");
+        mv.setViewName("/board/success");
         return mv;
      }
 
@@ -152,18 +176,6 @@ public class HomeController {
         mv.setViewName("redirect:/board/detail?no="+param.get("no"));
         return mv;
      }
-
-     //search
-   //   @RequestMapping("search")
-   //   public ModelAndView search(String value) {
-   //      ModelAndView mv = new ModelAndView();
-   //      int totalPageCount = numbering(value);
-   //      System.out.println("검색된 결과 수:" +totalPageCount);
-        
-        
-   //      mv.setViewName("redirect:/board/list");
-   //      return mv;
-   //   }
 
      //page numbering
      @RequestMapping

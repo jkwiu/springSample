@@ -28,7 +28,7 @@
 
     <insert id="insertBoard" parameterType="boardDto">
         INSERT INTO board VALUES 
-        (0, 
+        (null, 
         <include refid="title"/>, 
         <include refid="content"/>,
         #{count}, now())
