@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 // import java.util.List;
 
 // import javax.servlet.http.HttpServletRequest;
@@ -18,11 +19,12 @@ import jk.tutorial.demo.dto.BoardDTO;
 import jk.tutorial.demo.service.BoardServiceImpl;
 
 
+
 @Controller
 @RequestMapping("/board/")
 public class HomeController {
     
-    
+
     @Autowired
     private BoardServiceImpl bService;
 
@@ -36,36 +38,64 @@ public class HomeController {
       //board lists
       @RequestMapping("list")
       public ModelAndView list(int pageNum, String value){
-         ModelAndView mv = new ModelAndView();  
+         ModelAndView mv = new ModelAndView(); 
+         int pageNumber;
+         int searchedWord = 0;
+         int nextNumber = pageNum;
+
+         System.out.println("두번 째 검색 시 pagNum: " + pageNum);
+         //검색어 없음
+         if(numbering(value) == 0){
+            mv.setViewName("/board/failSearch");
+            System.out.println("---------------------------절 취 선 ----------------------------");
+            return mv;
+         }
+
+         if ( value != null) {
+            if ( pageNum != 0 ){
+               searchedWord = pageNum-1;
+            } else {
+               searchedWord = pageNum;
+            }
+            // pageNum = 0;
+         }
          //총 페이지 수
-         int getTotalCount = bService.getBoardListCnt(null);
+         int getTotalCount = bService.getBoardListCnt(value);
          if (getTotalCount % 10 == 0) {
             getTotalCount = getTotalCount/10;
          }  else {
             getTotalCount = getTotalCount/10 + 1;
          }      
+         System.out.println("getTotalCount: " + getTotalCount);
          if(pageNum < 0 || pageNum > getTotalCount){
             mv.setViewName("/board/error");
          }
          int endPage;
          int startPage;
          //when page list searched
-         if (pageNum == 0){
-            pageNum = numbering(value);
-            System.out.println("pageNum 검색 시 : " +pageNum);
-            endPage = 10;
-            startPage = 0;  
-            mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));
+         if (pageNum == 0 || value != null){
+            //최초 이후 검색
+            if(searchedWord != 0){
+               startPage = searchedWord*10;
+               endPage = 10;
+            } else {
+               //최초에 검색 pageNum=0
+               startPage = 0; 
+               endPage = 10;
+               pageNum=1;
+               System.out.println("pageNum:  " + pageNum);
+            }
+            mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));            
          //load all page list
          } else {
+            //쿼리 limit 페이징 처리 테스트2
+            startPage = (pageNum-1)*10;   
             endPage = 10;
-            startPage = pageNum*10 -10;   
             mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, null));
          }
          
          //paging nuumbering
-         int pageNumber = bService.getBoardListCnt(value);
-         System.out.println("검색시 밑에 page number: " + pageNumber);
+         pageNumber = bService.getBoardListCnt(value);
          List<Integer> pn = new ArrayList<Integer>();
          if (pageNumber % 10 == 0) {
             for(int i=1; i<pageNumber/10 +1; i++){
@@ -77,15 +107,16 @@ public class HomeController {
             }
          }
          mv.addObject("pn", pn);
-         System.out.println("검색시 pn: " + pn);
-         System.out.println("검색시 pageNum 밑에: " + pageNum);
-         int incomingPageNumber = pageNum-1;
-         int startPageNum = (incomingPageNumber/10*10);
+         // int incomingPageNumber = pageNum-1;
+         // int startPageNum = (incomingPageNumber/10*10);
+         int startPageNum = ((pageNum-1) / 10) * 10;
          int lastPageNum = startPageNum + 9;
+         if (startPageNum < 0){
+            startPageNum = 0;
+         }
+         System.out.printf("startPageNum: %s  lastPageNum: %s pageNum: %s \n", startPageNum, lastPageNum, pageNum);
          mv.addObject("startPageNum", startPageNum);
          mv.addObject("lastPageNum", lastPageNum);
-         System.out.printf("startPageNum:%s  lastPageNum: %s\n", startPageNum, lastPageNum);
-         System.out.println("총 페이지 수: " + pn);
 
          //navigation bar
          //move to last page
@@ -99,15 +130,24 @@ public class HomeController {
          mv.addObject("prePage", prePage);
 
          //move to next page
-         int nextPage = pageNum+1;
-         System.out.println("마지막 page number: " + lastPageNum);
-         System.out.println("nextPage1: " + nextPage);
-         if(nextPage > getTotalCount){
-            nextPage = nextPage - 1;
+         int nextPage = nextNumber + 1;
+         int lastPage = getTotalCount; 
+          if (nextPage == 1 ){
+            nextPage = nextPage + 1;
+            System.out.println("nextPage2: "  + nextPage);
+         } else if ( nextPage > lastPage) {
+            nextPage = pageNum;
          }
-         System.out.println("nextPage2: " + nextPage);
+         System.out.println("getTotalCount: " + pn.size());
+         System.out.println("nextPage3: "  + nextPage);
+         System.out.println("lastPage: " + lastPage);
+         System.out.println("startPageNum: " + startPageNum + " lastPageNum: " + lastPageNum);
          mv.addObject("nextPage", nextPage);
+         mv.addObject("lastPage", lastPage);
 
+         
+         System.out.println("---------------------------절 취 선 ----------------------------");
+         mv.addObject("searchWord", value);
          return mv;
      }
 

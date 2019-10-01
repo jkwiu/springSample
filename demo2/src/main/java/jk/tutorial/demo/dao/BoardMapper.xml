@@ -37,7 +37,8 @@
     <update id="updateBoard" parameterType="boardDto">
         UPDATE board SET
         title = <include refid="title"/>,
-        content = <include refid="content"/>
+        content = <include refid="content"/>,
+        Reg_Date = now()
         WHERE No = #{no}
     </update> 
     
@@ -46,9 +47,12 @@
     </delete>
     
     <select id="selectOneBoard" parameterType="int" resultType="boardDto">
-        SELECT * FROM board WHERE No = #{no}
-        
-
+        SELECT 
+            No,
+            Title,
+            Count,
+            Reg_Date as regDate 
+        FROM board WHERE No = #{no}
     </select>
     <update id="updateHitCnt" parameterType="hashmap">
 
@@ -61,7 +65,7 @@
              No,
              Title,
              Count,
-             Reg_Date as regDate
+             Reg_Date as regDate 
         FROM board
         <if test="words != null">
             WHERE Title LIKE CONCAT('%',#{words},'%') OR Content LIKE CONCAT('%',#{words},'%')

@@ -5,13 +5,19 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>성공</title>
+        <style>
+            #notice{
+                text-align: center;
+                padding-top: 250px;
+            }
+        </style>
+        <title>JK Tutorials</title>
     </head>
 
     <body>
-    <div>
+    <div id="notice">
     <label>
-       <h1>성공</h1>
+       <h1>검색 결과가 없습니다.</h1>
        <input Type = button value = 확인 onClick="location.href='http://localhost:8080/board/list?pageNum=1'">
     </label>
     </div>

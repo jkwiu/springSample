@@ -43,13 +43,9 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDTO> selectAllBoard(int startPage, int endPage, String words) {
         // TODO Auto-generated method stub
-
-System.out.println(startPage);
-System.out.println(endPage);
-System.out.println(words);
-
-
-        return bMapper.selectAllBoard(startPage, endPage, words);
+        List<BoardDTO> result = bMapper.selectAllBoard(startPage, endPage, words);
+        System.out.println("result: " + result);
+        return result;
     }
 
     // @Override

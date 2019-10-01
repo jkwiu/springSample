@@ -1,5 +1,7 @@
 package jk.tutorial.demo.dto;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BoardDTO{
@@ -26,8 +28,11 @@ public class BoardDTO{
         return count;
     }
 
-    public Date getRegDate(){
-        return regDate;
+    public String getRegDate(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd");
+        String strDate = dateFormat.format(regDate);
+        System.out.println("Manufactoried regDate:  " + strDate);
+        return strDate;
     }
 
     //Set Values
