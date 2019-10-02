@@ -4,27 +4,27 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
     
 <mapper namespace="jk.tutorial.demo.dao.BoardMapper">
-<sql id="title">
-    <choose>
-        <when test="title != null">
-            #{title}
-        </when>
-        <otherwise>
-            '제목없음'
-        </otherwise>
-    </choose>
-</sql>
+    <sql id="title">
+        <choose>
+            <when test="title != null">
+                #{title}
+            </when>
+            <otherwise>
+                '제목없음'
+            </otherwise>
+        </choose>
+    </sql>
 
-<sql id="content">
-    <choose>
-        <when test = "content != null">
-            #{content}
-        </when>
-        <otherwise>
-            '내용없음'
-        </otherwise>
-    </choose>
-</sql>
+    <sql id="content">
+        <choose>
+            <when test = "content != null">
+                #{content}
+            </when>
+            <otherwise>
+                '내용없음'
+            </otherwise>
+        </choose>
+    </sql>
 
     <insert id="insertBoard" parameterType="boardDto">
         INSERT INTO board VALUES 
@@ -36,27 +36,34 @@
     
     <update id="updateBoard" parameterType="boardDto">
         UPDATE board SET
-        title = <include refid="title"/>,
-        content = <include refid="content"/>,
-        Reg_Date = now()
+        <include refid="title"/>,
+        <include refid="content"/>,
         WHERE No = #{no}
     </update> 
     
     <delete id="deleteBoard" parameterType="int">
-        DELETE FROM board WHERE No = #{no}
+        DELETE 
+        FROM board 
+        
+        WHERE No = #{no}
     </delete>
     
     <select id="selectOneBoard" parameterType="int" resultType="boardDto">
         SELECT 
             No,
             Title,
+            Content,
             Count,
             Reg_Date as regDate 
-        FROM board WHERE No = #{no}
+        FROM board
+        WHERE No = #{no}
+        ORDER BY Reg_Date DESC 
     </select>
     <update id="updateHitCnt" parameterType="hashmap">
 
-         UPDATE board SET Count = Count + 1 WHERE No = #{no}
+         UPDATE board
+         SET Count = Count + 1
+         WHERE No = #{no}
 
     </update>
 
@@ -70,14 +77,14 @@
         <if test="words != null">
             WHERE Title LIKE CONCAT('%',#{words},'%') OR Content LIKE CONCAT('%',#{words},'%')
         </if>
+        ORDER BY Reg_Date DESC
         LIMIT #{startPage}, #{endPage}
     </select>
 
     <select id = "getBoardListCnt" resultType = "int">
         SELECT
             Count(*) as listCnt
-        FROM
-            board
+        FROM board
         <if test="value != null">
             WHERE Title LIKE CONCAT('%',#{value},'%') OR Content LIKE CONCAT('%',#{value},'%')
         </if>

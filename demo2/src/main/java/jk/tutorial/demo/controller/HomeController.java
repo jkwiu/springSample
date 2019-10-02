@@ -40,24 +40,25 @@ public class HomeController {
       public ModelAndView list(int pageNum, String value){
          ModelAndView mv = new ModelAndView(); 
          int pageNumber;
-         int searchedWord = 0;
+         int searchedWord = 0;  //search로 들어왔을 경우
          int nextNumber = pageNum;
 
-         System.out.println("두번 째 검색 시 pagNum: " + pageNum);
          //검색어 없음
          if(numbering(value) == 0){
             mv.setViewName("/board/failSearch");
-            System.out.println("---------------------------절 취 선 ----------------------------");
+            System.out.println("---------------------------절 취 선(검색 결과 없음) ----------------------------");
             return mv;
          }
 
+         //검색어가 있으면
          if ( value != null) {
+            //재검색이면
             if ( pageNum != 0 ){
                searchedWord = pageNum-1;
+            //최초 검색이면 searchedWord가 0을 물고 있는다
             } else {
                searchedWord = pageNum;
             }
-            // pageNum = 0;
          }
          //총 페이지 수
          int getTotalCount = bService.getBoardListCnt(value);
@@ -66,7 +67,6 @@ public class HomeController {
          }  else {
             getTotalCount = getTotalCount/10 + 1;
          }      
-         System.out.println("getTotalCount: " + getTotalCount);
          if(pageNum < 0 || pageNum > getTotalCount){
             mv.setViewName("/board/error");
          }
@@ -76,16 +76,16 @@ public class HomeController {
          if (pageNum == 0 || value != null){
             //최초 이후 검색
             if(searchedWord != 0){
-               startPage = searchedWord*10;
+               startPage = (pageNum - 1) * 10;
                endPage = 10;
             } else {
                //최초에 검색 pageNum=0
                startPage = 0; 
                endPage = 10;
                pageNum=1;
-               System.out.println("pageNum:  " + pageNum);
             }
-            mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value));            
+            mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value)); 
+            System.out.println("home controller에서 list를 보낼 때: " + bService.selectAllBoard(startPage, endPage, value));           
          //load all page list
          } else {
             //쿼리 limit 페이징 처리 테스트2
@@ -107,14 +107,11 @@ public class HomeController {
             }
          }
          mv.addObject("pn", pn);
-         // int incomingPageNumber = pageNum-1;
-         // int startPageNum = (incomingPageNumber/10*10);
-         int startPageNum = ((pageNum-1) / 10) * 10;
-         int lastPageNum = startPageNum + 9;
+         int startPageNum = ((pageNum-1) / 10) * 10;  //variable to query
+         int lastPageNum = startPageNum + 9;          //variable to query
          if (startPageNum < 0){
             startPageNum = 0;
          }
-         System.out.printf("startPageNum: %s  lastPageNum: %s pageNum: %s \n", startPageNum, lastPageNum, pageNum);
          mv.addObject("startPageNum", startPageNum);
          mv.addObject("lastPageNum", lastPageNum);
 
@@ -131,23 +128,33 @@ public class HomeController {
 
          //move to next page
          int nextPage = nextNumber + 1;
-         int lastPage = getTotalCount; 
+         int initialPage = 1;
+         int lastPage = getTotalCount;
           if (nextPage == 1 ){
             nextPage = nextPage + 1;
-            System.out.println("nextPage2: "  + nextPage);
          } else if ( nextPage > lastPage) {
             nextPage = pageNum;
          }
-         System.out.println("getTotalCount: " + pn.size());
-         System.out.println("nextPage3: "  + nextPage);
-         System.out.println("lastPage: " + lastPage);
-         System.out.println("startPageNum: " + startPageNum + " lastPageNum: " + lastPageNum);
          mv.addObject("nextPage", nextPage);
          mv.addObject("lastPage", lastPage);
 
-         
+         System.out.println("pn: " + pn);
+         System.out.println("startPage: " + startPage);
+         System.out.println("endPage: " + endPage);
+         System.out.println("startPageNum: " + startPageNum);
+         System.out.println("lastPageNum: " + lastPageNum);
+         System.out.println("nextPage: " + nextPage);
+         System.out.println("initialPage: " + initialPage);
+         System.out.println("lastPage: " + lastPage);
+         System.out.println("pageNum: " + pageNum);
+         System.out.println("searchedWord: " + searchedWord);
+         System.out.println("searchWord: " + value);
+
+      
          System.out.println("---------------------------절 취 선 ----------------------------");
          mv.addObject("searchWord", value);
+         mv.addObject("initialPage", 1);
+         mv.addObject("searchedWord", searchedWord);
          return mv;
      }
 
@@ -181,6 +188,14 @@ public class HomeController {
         BoardDTO board = new BoardDTO();
         board.setTitle(param.get("title"));
         board.setContent(param.get("content"));
+        String test = param.get("title").trim();
+        if(test == "" ){
+           System.out.println("null입니다%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+           
+        } else {
+         System.out.println("null이 아닙니다%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        }
+        System.out.println("title in home controller: " + test);
         bService.write(board);
         mv.setViewName("/board/success");
         return mv;

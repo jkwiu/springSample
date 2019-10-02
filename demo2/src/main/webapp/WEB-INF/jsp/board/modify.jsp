@@ -25,14 +25,14 @@
 </head>
 <body>
     <form method="post" id="authForm" action = "http://localhost:8080/board/modify-action">
-        <div>
+        <div style="text-align:center;">
             <label for="title">제목</label>
             <input type="text " id="title" name="title"  value="${queryOne.title}" ><br><br>
             <label for="content">내용</label>
             <input type="text" id="content" name="content" value="${queryOne.content}" >
             <input type="hidden" id="no" name="no" value="${queryOne.no}" >
         </div>
-        <button type="submit" >수정</button><br><br>
+        <button type="submit" style="float:right">수정</button><br><br>
     </form>
 </body>
 </html>

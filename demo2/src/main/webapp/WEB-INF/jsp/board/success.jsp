@@ -5,11 +5,17 @@
 
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         <style>
+            #notice{
+                text-align: center;
+                padding-top: 250px;
+            }
+        </style>
         <title>성공</title>
     </head>
 
     <body>
-    <div>
+    <div id = "notice">
     <label>
        <h1>성공</h1>
        <input Type = button value = 확인 onClick="location.href='http://localhost:8080/board/list?pageNum=1'">

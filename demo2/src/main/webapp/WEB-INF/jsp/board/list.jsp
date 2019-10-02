@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
+   
     <title>전체 게시글</title>
     
     <style type="text/css">
@@ -32,7 +33,6 @@
     </div>
 </head>
 <body>   
- 
 <div id="wrap">
     <br>
     <div id="topForm">
@@ -54,7 +54,7 @@
                 ${list.no}
             </td>
             <td width = "2000" style="padding-left:10px">
-                <a href = "http://localhost:8080/board/detail?no=${list.no}"> ${list.title}</a>
+                <a href = "http://localhost:8080/board/detail?no=${list.no}">&nbsp;${list.title}</a>
             </td>
             <td width = "150" align=center valign=middle>
                 ${list.count}
@@ -71,7 +71,7 @@
     <table class="pager" style="margin-left:auto; margin-right:auto;padding-top:10px;">
         <tr>
             <td>
-                <a href = "http://localhost:8080/board/list?pageNum=1&value=${searchWord}">[맨 처음]</a>
+                <a href = "http://localhost:8080/board/list?pageNum=${initialPage}&value=${searchWord}">[맨 처음]</a>
             </td>
             <td>
                 <a href = "http://localhost:8080/board/list?pageNum=${prePage}&value=${searchWord}">◀</a>
@@ -79,8 +79,8 @@
             <c:forEach items="${pn}" var="pageNum" begin = "${startPageNum}" end = "${lastPageNum}">
             <td>
                     <c:choose>
-                        <c:when test="${pageNum eq nextPage-1 && lastPageNum eq pageNum}">
-                            <label style="font-size:30px;">${pageNum}</label>
+                        <c:when test="${pageNum eq searchedWord + 1}">
+                                    <label style="font-size:30px;">${pageNum}</label>                                
                         </c:when>
                         <c:otherwise>
                             <a href = "http://localhost:8080/board/list?pageNum=${pageNum}&value=${searchWord}">${pageNum}</a>

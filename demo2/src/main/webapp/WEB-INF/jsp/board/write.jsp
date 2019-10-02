@@ -27,9 +27,11 @@
     <form method="post" id="authForm" action = "http://localhost:8080/board/write-action">
         <div>
             <label for="title">제목</label>
-            <input type="text " id="title" name="title" placeholder="title" ><br><br>
+            <input type="text " id="title" name="title" placeholder="title" required>
+            <br>
+            <br>
             <label for="content">내용</label>
-            <input type="text" id="content" name="content" placeholder="content" >
+            <input type="text" id="content" name="content" placeholder="content" required>
         </div>
         <button type="submit" >저장</button><br><br>
     </form>

@@ -39,6 +39,12 @@
                 </td>
             </tr>
             <tr>
+                <th>내 용</th>
+                <td height = "500">
+                    ${queryOne.content}
+                </td>
+            </tr>
+            <tr>
                 <th>조회수</th>
                 <td width = " 2000">
                     ${queryOne.count}
@@ -48,12 +54,6 @@
                 <th>작성일</th>
                 <td width = " 2000">
                     ${queryOne.regDate}
-                </td>
-            </tr>
-            <tr>
-                <th>내 용</th>
-                <td height = "500">
-                    ${queryOne.content}
                 </td>
             </tr>
         </table>

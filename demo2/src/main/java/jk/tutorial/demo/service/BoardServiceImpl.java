@@ -16,6 +16,7 @@ public class BoardServiceImpl implements BoardService {
  
     @Override
     public void write(BoardDTO board) {
+        System.out.println("title writen at board: " + board.getTitle().length() + "content writen at board: " + board.getContent().length());
         // TODO Auto-generated method stub
         bMapper.insertBoard(board);
     }
@@ -44,7 +45,7 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardDTO> selectAllBoard(int startPage, int endPage, String words) {
         // TODO Auto-generated method stub
         List<BoardDTO> result = bMapper.selectAllBoard(startPage, endPage, words);
-        System.out.println("result: " + result);
+        System.out.println("db에서 나올 때 strings: " + result);
         return result;
     }
 
