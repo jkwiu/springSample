@@ -49,37 +49,44 @@ public class BoardServiceImpl implements BoardService {
         return result;
     }
 
-    // @Override
-    // public List<BoardDTO> searchBoard(String word){
-    //     return bMapper.search(word);
-    // }
-
-    // @Override
-    // public List<Integer> pageNum(int totalNum){
-    //     List<Integer> result = new ArrayList<Integer>();
-    //     if(totalNum % 10 == 0){
-    //         for(int i=0; i<totalNum / 10; i++){
-    //             result.add(i);
-    //         }
-    //     } else {
-    //         for(int i=0; i<(totalNum / 10) +1; i++){
-    //             result.add(i);
-    //         }
-    //     }
-    //     return result;
-    // }
-
-    // @Override
-    // public int pageNum(int totalNum){
-    //     if(totalNum % 10 == 0){
-    //         return totalNum/10;
-    //     }
-    //     return totalNum/10 +1;
-    // }
-
     @Override
     public int getBoardListCnt(String value){
         return bMapper.getBoardListCnt(value);
+    }
+
+    @Override
+    public void writeReply(BoardDTO board){
+        bMapper.insertReplyBoard(board);
+    }
+
+    @Override
+    public void replyCount(int originNo, int groupOrd){
+        bMapper.updateReplyCount(originNo, groupOrd);
+    }
+
+    @Override
+    public int getBoardReplyCount(int num){
+        int result = bMapper.getCountGroupLayer(num);
+        System.out.println("답글의 총 갯 수는?: " + result);
+        return result;
+    }
+
+    @Override
+    public int getBoardGroupOrd(int num){
+        int result = bMapper.getGroupOrd(num);
+        return result;
+    }
+
+    @Override
+    public void setOriginNo(int num){
+        bMapper.updateOriginNo(num);
+    }
+
+    @Override
+    public int getLastBoardNo(){
+        int result = bMapper.getLastNo();
+        System.out.println("마지막 글의 번호는: "  + result);
+        return result;
     }
 
 }

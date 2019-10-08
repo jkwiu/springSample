@@ -3,7 +3,7 @@
     
 <html>
 <head>
-    <title>글 쓰기</title>
+    <title>답글 달기</title>
     
     <style type="text/css">
         #title{
@@ -24,15 +24,16 @@
 
 </head>
 <body>
-    <form method="post" id="authForm" action = "http://localhost:8080/board/write-action">
+    <form method="post" id="authForm" action = "http://localhost:8080/board/reply-action">
         <div>
             <label for="title">제목</label>
-            <input type="text " id="title" name="title" placeholder="title" required>
+                <input type="text " id="title" name="title"  value="${re}${reply}" readonly>            
             <br>
             <br>
             <label for="content">내용</label>
             <input type="text" id="content" name="content" placeholder="content" required>
-            <input type="hidden" id="groupOrd" name="groupOrd" value="${queryOne.groupOrd}" >
+            <input type="hidden" id="no" name="no" value="${queryOne.no}" >
+            <input type="hidden" id="groupOrd" name="groupOrd" value="${queryOne.groupOrd}" >            
         </div>
         <button type="submit" >저장</button>
         <br>

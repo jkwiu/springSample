@@ -15,4 +15,10 @@ public interface BoardMapper {
     public List<BoardDTO> selectAllBoard(int startPage, int endPage, String words);
     // public List<BoardDTO> search(String word);
     public int getBoardListCnt(String value);
+    public void updateReplyCount(int originNo, int groupOrd);
+    public void insertReplyBoard(BoardDTO board);
+    public int getCountGroupLayer(int num);
+    public int getLastNo();
+    public int getGroupOrd(int num);
+    public void updateOriginNo(int num);
 }

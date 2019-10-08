@@ -4,11 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
-// import java.util.List;
-
-// import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,14 +36,13 @@ public class HomeController {
          ModelAndView mv = new ModelAndView(); 
          int pageNumber;
          int searchedWord = 0;  //search로 들어왔을 경우
-         int nextNumber = pageNum;
 
          //검색어 없음
-         if(numbering(value) == 0){
-            mv.setViewName("/board/failSearch");
-            System.out.println("---------------------------절 취 선(검색 결과 없음) ----------------------------");
-            return mv;
-         }
+         // if(numbering(value) == 0){
+         //    mv.setViewName("/board/failSearch");
+         //    System.out.println("---------------------------절 취 선(검색 결과 없음) ----------------------------");
+         //    return mv;
+         // }
 
          //검색어가 있으면
          if ( value != null) {
@@ -64,12 +58,16 @@ public class HomeController {
          int getTotalCount = bService.getBoardListCnt(value);
          if (getTotalCount % 10 == 0) {
             getTotalCount = getTotalCount/10;
-         }  else {
+         } else {
             getTotalCount = getTotalCount/10 + 1;
-         }      
-         if(pageNum < 0 || pageNum > getTotalCount){
-            mv.setViewName("/board/error");
-         }
+         }    
+         // if(pageNum < 0){
+         //    System.out.println("pageNum이 0보다 작습니다.");
+         //    mv.setViewName("/board/error");
+         // } else if (pageNum > getTotalCount){
+         //    System.out.println("getTotalCount: " + getTotalCount);
+         //    mv.setViewName("redirect:/board/list?pageNum=1");
+         // }
          int endPage;
          int startPage;
          //when page list searched
@@ -85,7 +83,6 @@ public class HomeController {
                pageNum=1;
             }
             mv.addObject("queryAll", bService.selectAllBoard(startPage, endPage, value)); 
-            System.out.println("home controller에서 list를 보낼 때: " + bService.selectAllBoard(startPage, endPage, value));           
          //load all page list
          } else {
             //쿼리 limit 페이징 처리 테스트2
@@ -127,16 +124,16 @@ public class HomeController {
          mv.addObject("prePage", prePage);
 
          //move to next page
-         int nextPage = nextNumber + 1;
+         int nextPage = pageNum + 1;
          int initialPage = 1;
-         int lastPage = getTotalCount;
-          if (nextPage == 1 ){
-            nextPage = nextPage + 1;
-         } else if ( nextPage > lastPage) {
+
+         if ( nextPage > getTotalCount ) {
             nextPage = pageNum;
+         } else if ( getTotalCount == 1 ) {
+            nextPage = 1;
          }
          mv.addObject("nextPage", nextPage);
-         mv.addObject("lastPage", lastPage);
+         mv.addObject("lastPage", getTotalCount);
 
          System.out.println("pn: " + pn);
          System.out.println("startPage: " + startPage);
@@ -145,12 +142,10 @@ public class HomeController {
          System.out.println("lastPageNum: " + lastPageNum);
          System.out.println("nextPage: " + nextPage);
          System.out.println("initialPage: " + initialPage);
-         System.out.println("lastPage: " + lastPage);
          System.out.println("pageNum: " + pageNum);
          System.out.println("searchedWord: " + searchedWord);
          System.out.println("searchWord: " + value);
-
-      
+         System.out.println("getTotalCount: " + getTotalCount);
          System.out.println("---------------------------절 취 선 ----------------------------");
          mv.addObject("searchWord", value);
          mv.addObject("initialPage", 1);
@@ -188,17 +183,53 @@ public class HomeController {
         BoardDTO board = new BoardDTO();
         board.setTitle(param.get("title"));
         board.setContent(param.get("content"));
-        String test = param.get("title").trim();
-        if(test == "" ){
-           System.out.println("null입니다%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-           
-        } else {
-         System.out.println("null이 아닙니다%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        }
-        System.out.println("title in home controller: " + test);
+        System.out.println("title in home controller: " + param.get("title"));
+        System.out.println("content in home controller: " + param.get("content"));
         bService.write(board);
+        int originNo = bService.getLastBoardNo();
+      //   int groupOrd = bService.getBoardGroupOrd(originNo);
+        System.out.println("[write-action] originNo는 " +   originNo);
+      //   System.out.println("[write-action] groupOrd는 " + groupOrd);
+        bService.setOriginNo(originNo);
         mv.setViewName("/board/success");
         return mv;
+     }
+
+     //reply
+     @RequestMapping("reply")
+     public ModelAndView reply(int no){
+        ModelAndView mv = new ModelAndView();
+        //답글의 form 부분
+        int countLayer = bService.getBoardReplyCount(no);
+        System.out.println("원글의 번호는: " + no);
+        System.out.println("답글 수는: " +countLayer);
+        String reRepeat = "re:";
+        for(int i = 0; i<countLayer; i++){
+           reRepeat += reRepeat;
+        }
+        mv.addObject("re", "re:");
+        mv.addObject("queryOne", bService.getBoard(no));
+        mv.addObject("reply", bService.getBoard(no).getTitle());
+        return mv;
+     }
+
+     //reply-action
+     @RequestMapping("reply-action")
+     public ModelAndView replyAction(@RequestParam Map<String, String> param){
+       ModelAndView mv = new ModelAndView();
+       BoardDTO board = new BoardDTO();
+       board.setTitle(param.get("title"));
+       System.out.println("이 답글의 제목은: " +  param.get("title"));
+       board.setContent(param.get("content"));
+       int originNo = Integer.parseInt(param.get("no"));
+       int groupOrd = Integer.parseInt(param.get("groupOrd"));
+       System.out.println("[reply-action] originNo: " + originNo);
+       System.out.println("[reply-action] groupOrd: " + groupOrd);
+       bService.writeReply(board);
+       bService.setOriginNo(originNo);
+       bService.replyCount(originNo, groupOrd);
+       mv.setViewName("redirect:/board/list?pageNum=1");
+       return mv;
      }
 
      //delete

@@ -19,6 +19,9 @@
             #bList{
                 text-align: center;
             }
+            #comment{
+                width: 800px;
+            }
         </style>
 
 </head>
@@ -31,7 +34,7 @@
         </div>
     <br>
         <div id="board">
-        <table BORDER="1" CELLPADDING="3" CELLSPACING="1">
+        <table BORDER="1" CELLPADDING="3" CELLSPACING="1"  style="word-wrap:break-word;word-break:break-all;">
             <tr>
                 <th width="200">제 목</TH>
                 <td width = " 2000">
@@ -59,6 +62,10 @@
         </table>
         <br>
             <div style="text-align:right">
+                <form method = "post" action = "http://localhost:8080/board/reply" style="display:inline">
+                    <input name="no" type = "hidden" value="${queryOne.no}">
+                    <input type="submit" value="답글달기">
+                </form>
                 <form method = "post" action = "http://localhost:8080/board/delete" style="display:inline">
                     <input name="no" type = "hidden" value="${queryOne.no}">
                     <input type="submit" value="삭제">
@@ -69,6 +76,33 @@
                     <input type="submit" value="수정">
                 </form>
             </div>
+    </div>
+    <div id = "comment">      
+        <div id = "comment_count">
+        </div>
+        <div id = "comment_table" style="margin-left:auto; margin-right:auto;padding-top:10px;">
+            <table class = "pager">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div id = "text_wraper" style="margin-left:auto; margin-right:auto;padding-top:10px;">
+                                <span>
+                                    댓글 단 시간${comment.time}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div id = "text_wraper" style="margin-left:auto; margin-right:auto;padding-top:10px;">
+                                <span>
+                                    댓글 내용${comment.content}
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 </div>
     </body>

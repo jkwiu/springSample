@@ -13,4 +13,10 @@ public interface BoardService{
     // public List<BoardDTO> searchBoard(String word);
     // public int pageNum(int num);
     public int getBoardListCnt(String value);
+    public void replyCount(int originNo, int groupOrd);
+    public void writeReply(BoardDTO board);
+    public int getBoardReplyCount(int num);
+    public int getLastBoardNo();
+    public int getBoardGroupOrd(int num);
+    public void setOriginNo(int num);
 }
